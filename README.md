@@ -39,7 +39,7 @@ echo "   Project Root      : $PROJECT_ROOT"
 
 git config in [.envrc](.envrc)
 ```bash
-.repo-shared/git/config
+$PWD/.repo-shared/git/config
 ```
 
 ### Maven scripts
