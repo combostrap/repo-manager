@@ -2,101 +2,55 @@
 
 
 ## About
-Common scripts and configuration used in Combostrap repositories
+Common scripts and configuration used in Combostrap repositories.
 
-Each repository has a [.envrc](.envrc) file that is leading.
+## Install
 
-The [.envrc](.envrc) installs from this repository what it needs.
+Prerequisite: [direnv](https://direnv.net/) should be installed on your computer.
 
-## Steps
-
-
-### Step 1 - Project Environment
-
-Project Environment are common project variables
-
-In [.envrc](.envrc)
+Then:
 ```bash
-echo "Project: "
-export PROJECT_ORGANISATION_NAME="combostrap"
-echo "   Organization Name : $PROJECT_ORGANISATION_NAME"
-export PROJECT_ROOT="$PWD"
-echo "   Project Root      : $PROJECT_ROOT"
+# Init your repo
+git init
+# Install repo shared
+curl -O https://raw.githubusercontent.com/combostrap/repo-shared/refs/heads/main/envrc/.envrc
+# Type enter to kick envrc in
 ```
 
+The [.envrc](envrc/.envrc) file is the main entry point and update itself.
 
-### Install/Setup
+## Features
 
-The installation is done by cloning the repo to a well-known location.
-By default, this location is `$PWD/../repo-shared`
+### Git User Configuration
 
-Example Script in [.envrc](.envrc)
-```bash
-SHARED_REPO_DIR_VAR_NAME="GIT_${PROJECT_ORGANISATION_NAME}_SHARED_REPO_DIR"
-SHARED_REPO_DIR=$(realpath "${!SHARED_REPO_DIR_VAR_NAME:-$PWD/../repo-shared}")
-if [ ! -d "$SHARED_REPO_DIR" ]; then
+Mandatory, you need to set in your `.bashrc`:
+* `GIT_COMBOSTRAP_EMAIL`
+* `GIT_COMBOSTRAP_SIGNING_KEY`
 
-    function echo::warning(){
-        YELLOW="\033[0;33m"
-        NO_COLOR="\033[0m"
-        echo -e "${YELLOW}Warning: $1$NO_COLOR"
-    }
+See [Git User Configuration](git/config/user)
 
-    SHARED_REPO_URI_VAR_NAME="GIT_${PROJECT_ORGANISATION_NAME}_SHARED_REPO_URI"
-    SHARED_REPO_URI="${!SHARED_REPO_URI_VAR_NAME:-https://github.com/combostrap/repo-shared}"
-    echo::warning "Shared repo installation"
-    echo::warning "Clone $URL to $SHARED_REPO_DIR? Y(Yes-Default)/N(No)"
-    read -r CLONE
-    if [ "$CLONE" == "" ] || [ "$CLONE" == "Y" ]; then
-        git clone "$SHARED_REPO_URI" "$SHARED_REPO_DIR"
-        echo::warning "Shared repo cloned"
-    fi
+### Git Hooks Configuration
 
-fi
-````
+Git hooks are installed at `.git-hooks`
 
+See [Git Hooks Configuration](git/config/hooks)
 
-### Git User Config
+### Git Commit Message Hook Installation
 
-Git user config to set the user email and name.
+Install [commit message hook](git/hooks/commit-msg)
 
-in [.envrc](.envrc)
-```bash
-$SHARED_REPO_DIR/git/config/user
-```
+### Scripts in PATH
 
-### Git Hooks
+Install the common [scripts](bin) in the `PATH`
 
-Git hooks configuration
+### Editor Config for code styling
 
-in [.envrc](.envrc)
-```bash
-GIT_HOOKS="$PROJECT_ROOT/.git-hooks"
-$SHARED_REPO_DIR/git/config/hooks "$GIT_HOOKS"
-```
+Install the [root editor config](editorconfig/root/.editorconfig)
 
-Install commit message hook:
-```bash
-rsync "$SHARED_REPO_DIR/git/hooks/commit-msg" "$GIT_HOOKS/commit-msg"
-```
+## Concept
 
-### Scripts
+The [envrc](envrc/.envrc) file is the main entry
 
-Scripts in the path
-
-In [.envrc](.envrc)
-```bash
-export PATH="$PATH:$SHARED_REPO_DIR/bin"
-```
-
-### Editor Config
-
-For code styling
-
-root installation in [.envrc](.envrc)
-```bash
-rsync $SHARED_REPO_DIR/editorconfig/root/.editorconfig $PROJECT_ROOT/.editorconfig
-```
-
-Check that editor config is enabled in your IDE.
-* [Idea Intellij](https://www.jetbrains.com/help/idea/editorconfig.html#disable-editorconfig)
+* It will clone this repo locally
+* install and configure the mandatory stuff
+* and update itself if needed

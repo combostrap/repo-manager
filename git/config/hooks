@@ -13,4 +13,4 @@ if [ ! -d "$GIT_HOOKS" ]; then
 fi
 
 git config core.hooksPath "$GIT_HOOKS"
-echo "   Git HooksPath: $GIT_HOOKS"
+echo "   Git HooksPath: $(realpath --relative-to=. "$GIT_HOOKS")"
