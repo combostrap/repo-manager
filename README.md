@@ -1,8 +1,16 @@
-# Repo Shared Scripts and Configuration
+# Repo Manager: Dynamic Git Repository Template
 
 
 ## About
-Common scripts and configuration used in Combostrap repositories.
+Manage and init the common stuff on all your repository
+
+## Concept / How it works
+
+The [envrc](envrc/.envrc) file is the main entry
+
+* Once [installed](#install), it will clone this repo locally at `../repo-shared`
+* [install and configure the mandatory stuff](#installation-and-configuration)
+* and update itself if needed
 
 ## Install
 
@@ -14,12 +22,11 @@ Then:
 git init
 # Install repo shared
 curl -O https://raw.githubusercontent.com/combostrap/repo-shared/refs/heads/main/envrc/.envrc
-# Type enter to kick envrc in
+# Type enter to kick envrc in or
+direnv reload
 ```
 
-The [.envrc](envrc/.envrc) file is the main entry point and update itself.
-
-## Features
+## Installation and configuration
 
 ### Git User Configuration
 
@@ -47,10 +54,11 @@ Install the common [scripts](bin) in the `PATH`
 
 Install the [root editor config](editorconfig/root/.editorconfig)
 
-## Concept
+### Default .gitignore and .gitattributes installation
 
-The [envrc](envrc/.envrc) file is the main entry
+Default  [.gitignore](git/ignore/.gitignore) and [.gitattributes](git/ignore/.gitattributes) are installed if not found.
 
-* It will clone this repo locally
-* install and configure the mandatory stuff
-* and update itself if needed
+### Default License
+
+Default License is installed if not found
+
