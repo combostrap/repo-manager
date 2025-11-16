@@ -4,44 +4,31 @@
 # Strict Bash
 set -TCEeuo pipefail
 
-# Function to check if a user environment variable is set
-# Scope of env
-USER_ENV_SCOPE="user"
-check_env_var() {
-    local var_name="$1"
-    local var_value="$2"
-    local var_scope="${3:-}"
-
-    if [ -z "$var_value" ]; then
-        echo "ERROR: $var_name environment variable is not set"
-        if [ "$var_scope" == "$USER_ENV_SCOPE" ]; then
-          echo "  Please set it in your shell profile, ~/.bashrc, ~/.zshrc, or ~/.config/direnv/direnvrc, or ~/.envrc.local"
-        fi
-        return 1
-    fi
-    return 0
-}
-
-# Mandatory to determine the name of user env
-check_env_var "PROJECT_ORGANISATION_NAME" "$PROJECT_ORGANISATION_NAME" || return 1
+source "$RM_DIR/bash/resource-manager-lib.sh"
 
 
 # Git User Email
 # Env name should be uppercase without minus
-ENV_ORGANISATION_NAME=$(echo "$PROJECT_ORGANISATION_NAME" | tr '[:lower:]' '[:upper:]' | tr '-' '_' )
-EMAIL_VAR="GIT_${ENV_ORGANISATION_NAME}_EMAIL"
+EMAIL_VAR="${RESOURCE_MANAGER_ENV_PREFIX}${ORGANISATION_ENV_NAME}_EMAIL"
 EMAIL_VALUE="${!EMAIL_VAR}"
-check_env_var "$EMAIL_VAR" "$EMAIL_VALUE" "$USER_ENV_SCOPE" || return 1
-git config user.email "$EMAIL_VALUE"
-echo "   Email: $EMAIL_VALUE"
+if rm_check_env_var "$EMAIL_VAR" "$EMAIL_VALUE" "$USER_ENV_SCOPE"; then
+
+  git config user.email "$EMAIL_VALUE"
+  echo "   Email: $EMAIL_VALUE"
+
+fi
 
 # Git signing key is the long format dir
 # gpg --list-secret-keys --keyid-format=long
 SIGNING_KEY_VAR="GIT_${ENV_ORGANISATION_NAME}_SIGNING_KEY"
 SIGNING_KEY_VALUE="${!SIGNING_KEY_VAR}"
-check_env_var "$SIGNING_KEY_VAR" "$SIGNING_KEY_VALUE" "$USER_ENV_SCOPE" || return 1
-git config user.signingkey "$SIGNING_KEY_VALUE"
-echo "   GPG Key: $SIGNING_KEY_VALUE"
+if rm_check_env_var "$SIGNING_KEY_VAR" "$SIGNING_KEY_VALUE" "$USER_ENV_SCOPE"; then
 
-git config commit.gpgsign true
-echo "   GPG Sign: true"
+  git config user.signingkey "$SIGNING_KEY_VALUE"
+  echo "   GPG Key: $SIGNING_KEY_VALUE"
+
+  git config commit.gpgsign true
+  echo "   GPG Sign: true"
+
+fi
+

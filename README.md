@@ -1,14 +1,14 @@
-# Repo Manager: Dynamic Git Repository Template
+# Repo Manager: Dynamic Git Repository Configuration
 
 
 ## About
-Manage and init the common stuff on all your repository
+Manage, init and update the common stuff on all your Git repositories.
 
 ## Concept / How it works
 
 The [envrc](envrc/.envrc) file is the main entry
 
-* Once [installed](#install), it will clone this repo locally at `../repo-shared`
+* Once [installed](#install), it will clone this repo locally at `../repo-manager`
 * [install and configure the mandatory stuff](#installation-and-configuration)
 * and update itself if needed
 
@@ -20,9 +20,9 @@ Then:
 ```bash
 # Init your repo
 git init
-# Install repo shared
-curl -O https://raw.githubusercontent.com/combostrap/repo-shared/refs/heads/main/envrc/.envrc
-# Type enter to kick envrc in or
+# Install repo manager
+curl -O https://raw.githubusercontent.com/combostrap/repo-manager/refs/heads/main/envrc/.envrc
+# Type enter to kick envrc in or reload
 direnv reload
 ```
 
@@ -31,8 +31,8 @@ direnv reload
 ### Git User Configuration
 
 Mandatory, you need to set in your `.bashrc`:
-* `GIT_COMBOSTRAP_EMAIL`
-* `GIT_COMBOSTRAP_SIGNING_KEY`
+* `GIT_${ORGANIZATION_NAME}_EMAIL`
+* `GIT_${ORGANIZATION_NAME}_SIGNING_KEY`
 
 See [Git User Configuration](git/config/user)
 
@@ -62,3 +62,21 @@ Default  [.gitignore](git/ignore/.gitignore) and [.gitattributes](git/ignore/.gi
 
 Default License is installed if not found
 
+## Environment
+
+You can change the behavior of the [envrc](envrc/.envrc) resource manager script by setting the following variable in
+your shell profile, `~/.bashrc`, or `~/.config/direnv/direnvrc`, or `~/.envrc.local`.
+
+The `PROJECT_ORGANISATION_NAME` variable optional.
+
+
+| `RM_${ORGANIZATION_NAME}_DIR` | `RM_DIR` | The local file system location of the resource manager repository clone | `$PROJET_ROOT/../repo-manager` |
+| `RM_${ORGANIZATION_NAME}_URI` | `RM_URI` | The URI location of the resource manager repository | https://github.com/combostrap/repo-manager |
+
+## Script
+
+In your scripts, you can use the following env:
+
+| `PROJECT_ROOT` | The root directory of the git repo |
+| `ORGANISATION_ENV_NAME` | The organization name in an env format |
+| `RESOURCE_MANAGER_ENV_PREFIX` | The resource manager prefix (ie `RM`) |
