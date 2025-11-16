@@ -1,50 +1,53 @@
 # Repo Manager: Dynamic Git Repository Configuration
 
-
 ## About
+
 Manage, init and update the common stuff on all your Git repositories.
 
 ## Concept / How it works
 
 The [envrc](envrc/.envrc) file is the main entry
 
-* Once [installed](#install), it will clone this repo locally at `../repo-manager`
-* [install and configure the mandatory stuff](#installation-and-configuration)
+* Once [installed](#how-to-install-it-in-a-git-repo), it will clone the `repo manager` repo if not found
+* [install, configure and sync the repo](#what-are-the-repo-configurations)
 * and update itself if needed
 
-## Install
+## How to install it in a git repo
 
 Prerequisite: [direnv](https://direnv.net/) should be installed on your computer.
 
 Then:
+
 ```bash
-# Init your repo
+# Init a repo if you don't have one
 git init
 # Install repo manager
 curl -O https://raw.githubusercontent.com/combostrap/repo-manager/refs/heads/main/envrc/.envrc
-# Type enter to kick envrc in or reload
+# Type enter to kick direnv in or reload
 direnv reload
 ```
 
-## Installation and configuration
+## What are the repo configurations?
 
 ### Git User Configuration
 
-Mandatory, you need to set in your `.bashrc`:
-* `GIT_${ORGANIZATION_NAME}_EMAIL`
-* `GIT_${ORGANIZATION_NAME}_SIGNING_KEY`
+To set the git user, you can set in your `.bashrc` the following env:
 
-See [Git User Configuration](git/config/user)
+| Env with Organization                 | Env Without Organization |
+|---------------------------------------|--------------------------|
+| `RM_${ORGANIZATION_NAME}_EMAIL`       | `RM_EMAIL`               |
+| `RM_${ORGANIZATION_NAME}_SIGNING_KEY` | `RM_SIGNING_KEY`         |
 
-### Git Hooks Configuration
+See the [Git User Configuration Script](git/config/user)
 
-Git hooks are installed at `.git-hooks`
+### Git Hooks Configuration and installation
 
-See [Git Hooks Configuration](git/config/hooks)
+The git hooks directory is configured to `.git-hooks` (See [Git Hooks configuration scripts](git/config/hooks))
 
-### Git Commit Message Hook Installation
+And the following hooks are synced in it:
 
-Install [commit message hook](git/hooks/commit-msg)
+* [commit message hook](git/hooks/commit-msg) - for commit lint check
+* [pre-commit](git/hooks/pre-commit) - to check for out of sync branch
 
 ### Scripts in PATH
 
@@ -54,29 +57,43 @@ Install the common [scripts](bin) in the `PATH`
 
 Install the [root editor config](editorconfig/root/.editorconfig)
 
-### Default .gitignore and .gitattributes installation
+### Copy .gitignore and .gitattributes if not found
 
 Default  [.gitignore](git/ignore/.gitignore) and [.gitattributes](git/ignore/.gitattributes) are installed if not found.
 
-### Default License
+### Create a Default LICENSE
 
 Default License is installed if not found
 
-## Environment
+### Project only env configuration (direnv.d)
+
+For project only configuration, you can add your own `direnv` scripts in the `PROJECT_ROOT/direnv.d` directory.
+All `.sh` files present in this directory will be sourced.
+
+In your scripts, you can use the following env:
+
+| Syntax                  | Description                                                          |
+|-------------------------|----------------------------------------------------------------------|
+| `PROJECT_ROOT`          | The root directory of the git repo (ie `GIT_ROOT` without submodule) |
+| `ORGANISATION_ENV_NAME` | The organization name in an env format                               |
+| `RM_PREFIX`             | The resource manager prefix (ie `RM`)                                |
+
+## Repo Manager Customization / Environment
 
 You can change the behavior of the [envrc](envrc/.envrc) resource manager script by setting the following variable in
 your shell profile, `~/.bashrc`, or `~/.config/direnv/direnvrc`, or `~/.envrc.local`.
 
-The `PROJECT_ORGANISATION_NAME` variable optional.
+The `ORGANISATION_NAME` variable is optional.
 
+| Environment                                    | Default  Value                             | Description                                                             |
+|------------------------------------------------|--------------------------------------------|-------------------------------------------------------------------------|
+| `RM_${ORGANIZATION_NAME}_DIR` <BR> or `RM_DIR` | `$PROJET_ROOT/../repo-manager`             | The local file system location of the resource manager repository clone |
+| `RM_${ORGANIZATION_NAME}_URI` <BR> or `RM_URI` | https://github.com/combostrap/repo-manager | The URI location of the resource manager repository                     |
 
-| `RM_${ORGANIZATION_NAME}_DIR` | `RM_DIR` | The local file system location of the resource manager repository clone | `$PROJET_ROOT/../repo-manager` |
-| `RM_${ORGANIZATION_NAME}_URI` | `RM_URI` | The URI location of the resource manager repository | https://github.com/combostrap/repo-manager |
+## Contrib
 
-## Script
+You can fork this repo and
 
-In your scripts, you can use the following env:
+* make it your own
+* or create a pull request to contribute
 
-| `PROJECT_ROOT` | The root directory of the git repo |
-| `ORGANISATION_ENV_NAME` | The organization name in an env format |
-| `RM_PREFIX` | The resource manager prefix (ie `RM`) |
