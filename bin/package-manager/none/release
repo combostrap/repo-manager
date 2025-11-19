@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 set -TCEeuo pipefail # Strict Bash
 #
-bump_type=${1:-"patch}"  # or minor, major
+bump_type=${1:-"minor"}  # or patch, major
 # get the tags locally
 git pull --force
 # calculate the next version
-next_version=$(git cliff --bump "$bump_type" --context  | jq -r .[0].version)
+next_version=$(git cliff --bump "$bump_type" --context  --tag-pattern "v[0-9]+\\.[0-9]+\\.[0-9]+" | jq -r '.[0].version' | tr -d "v")
+echo "Releasing to the version $next_version"
 # release
-jreleaser --project-version="$next_version" release
+JRELEASER_PROJECT_VERSION="$next_version" jreleaser release
+echo "Release done"
