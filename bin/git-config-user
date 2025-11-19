@@ -14,7 +14,7 @@ EMAIL_VALUE="${!EMAIL_VAR:-}"
 if rm_check_env_var "$EMAIL_VAR" "$EMAIL_VALUE" "$USER_ENV_SCOPE"; then
 
   git config user.email "$EMAIL_VALUE"
-  echo "   Email     : $EMAIL_VALUE"
+  echo "   Email    : $EMAIL_VALUE"
 
 else
 
