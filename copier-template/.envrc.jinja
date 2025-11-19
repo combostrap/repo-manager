@@ -60,20 +60,22 @@ fi
 
 
 #################
+# REPM
 # Bin script installation
 # The installation is done by cloning the repo to a well-known location.
 #################
+echo ""
+echo "Repo manager: "
 export REPM_PREFIX="REPM"
 REPM_DIR_VAR_NAME="${REPM_PREFIX}_${ORGANISATION_ENV_NAME}_DIR"
 export REPM_DIR
 REPM_DIR="${!REPM_DIR_VAR_NAME:-}"
 if [ "$REPM_DIR" != "" ]; then
-  repm_echo_yellow "$REPM_DIR_VAR_NAME variable found with the value $REPM_DIR"
+  echo "   Repo Directory               : $REPM_DIR (from var $REPM_DIR_VAR_NAME)"
 else
-  REPM_DIR="$PWD/../repo-manager"
-  repm_echo_yellow "$REPM_DIR_VAR_NAME variable not found. Value set to: $REPM_DIR"
+  REPM_DIR=$(realpath "$PWD/../repo-manager")
+  echo "   Repo Directory               : $REPM_DIR (default)"
 fi
-REPM_DIR=$(realpath "${REPM_DIR}")
 if [ ! -d "$REPM_DIR" ]; then
 
     repm_echo_yellow "REPM_DIR ($REPM_DIR) does not exist."
@@ -90,13 +92,6 @@ fi
 
 # Exit if the repo was not installed
 if [ -d "$REPM_DIR" ]; then
-
-    #################
-    # REPM
-    #################
-    echo ""
-    echo "Repo manager: "
-    echo "   Repo Directory               : $REPM_DIR"
 
     #################
     # Bin
