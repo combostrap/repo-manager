@@ -40,3 +40,7 @@ repos:
     hooks:
       - id: prevent-out-of-sync-commit
         name: prevent out-of-sync branch commit
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker
+    rev: c9d5ed0 # v3.4.1
+    hooks:
+      - id: editorconfig-checker
