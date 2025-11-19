@@ -17,9 +17,8 @@ project:
     - git-config
     - editorconfig
     - git-hooks
-  links:
-    homepage: https://www.tabulify.com
-    documentation: https://www.tabulify.com
+    - pre-commit
+    - copier
   stereotype: NONE
 
 # Create a GitHub release
