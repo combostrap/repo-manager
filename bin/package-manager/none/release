@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -TCEeuo pipefail # Strict Bash
 #
-bump_type=${1:-"minor"}  # or patch, major
+bump_type=${1:-"patch"}  # or minor, major
 # get the tags locally
 git pull --force
 # calculate the next version
