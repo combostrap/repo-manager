@@ -19,6 +19,7 @@ repos:
     rev: 3c9471f # v3.14.1
     hooks:
       - id: markdown-link-check
+        name: markdown link check
         args: [ --quiet, "--config", ".config/markdown-lint-config.json" ]
   - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
     rev: e46582c # v9.23.0
@@ -26,6 +27,7 @@ repos:
       # equivalent to:
       # commitlint --extends '@commitlint/config-conventional' --verbose --edit  "$1"
       - id: commitlint
+        name: check commit message
         stages: [ commit-msg ]
         additional_dependencies: [ '@commitlint/config-conventional' ]
         args: [ "--verbose" , "--config", ".config/commitlint.config.js" ]
@@ -33,3 +35,4 @@ repos:
     rev: 096af74
     hooks:
       - id: prevent-out-of-sync-commit
+        name: prevent out-of-sync branch commit
