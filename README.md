@@ -1,57 +1,80 @@
-# Repo Manager: Dynamic Git Repository Configuration
+# Repo Manager: Dynamic Repository Management
 
 ## About
 
-Manage, init and update the common stuff on all your Git repositories.
+This repository helps to init and update git combostrap repositories.
 
 ## Concept / How it works
 
-The [envrc](envrc/.envrc) file is the main entry
+It uses the following software to manage common repositories stuff:
 
-* Once [installed](#how-to-install-it-in-a-git-repo), it will clone the `repo manager` repo if not found
-* [install, configure and sync the repo](#what-are-the-repo-configurations)
-* and update itself if needed
+* [copier](https://copier.readthedocs.io/) for project templating and upgrade
+* [direnv](https://direnv.net/) for project setup and environment
+* [pre-commit](https://pre-commit.com/) for files check and normalization
+* [bin](bin) scripts are made available by [cloning this repo](#scripts-in-path) and putting them in the `PATH`.
 
-## How to install it in a git repo
+## Where are the artifacts
 
-Prerequisite: [direnv](https://direnv.net/) should be installed on your computer.
+* The `copier` template is located at [copier template](copier-template)
+* The `pre-commit`
+  * config is part of the template at [.pre-commit-config.yaml](copier-template/.pre-commit-config.yaml)
+  * setup is performed with direnv via [.envrc](copier-template/.envrc.jinja)
+  * extra `git hooks` are available at [git-hooks](git-hooks)
+* The common dev scripts are in the [bin](bin)
 
-Then:
+## Steps
+
+### Prerequisites
+
+Install:
+
+* [copier](https://copier.readthedocs.io/en/stable/#installation)
+* [direnv](https://direnv.net/docs/installation.html)
+* [pre-commit](https://pre-commit.com/#install)
+
+### Copy or update this copier template
+
+* for a new git repo
+```bash
+cd your_repo
+git init
+copier copy https://github.com/combostrap/repo-manager .
+```
+* to update a git repo
+```bash
+copier update .
+```
+
+
+### Setup and local configuration
+
+The [.envrc](copier-template/.envrc.jinja) file is the main entry for `setup` and local config.
+
+It will:
+
+* install the git hooks with `pre-commit`
+* [install, configure and sync the repo](#scripts-in-path)
+
+If you open your terminal, `direnv` should execute `.envrc`.
+If not:
 
 ```bash
-# Init a repo if you don't have one
-git init
-# Install repo manager
-curl -O https://raw.githubusercontent.com/combostrap/repo-manager/refs/heads/main/envrc/.envrc
-# Type enter to kick direnv in or reload
 direnv reload
 ```
 
-## What are the repo configurations?
+
+## Features and configuration
 
 ### Git User Configuration
 
 To set the git user, you can set in your `.bashrc` the following env:
 
-| Env with Organization                 | Env Without Organization |
-|---------------------------------------|--------------------------|
-| `RM_${ORGANIZATION_NAME}_EMAIL`       | `RM_EMAIL`               |
-| `RM_${ORGANIZATION_NAME}_SIGNING_KEY` | `RM_SIGNING_KEY`         |
+| Env                                    |
+|----------------------------------------|
+| `GIT_${ORGANIZATION_NAME}_EMAIL`       |
+| `GIT_${ORGANIZATION_NAME}_SIGNING_KEY` |
 
 See the [Git User Configuration Script](bin/git-config-user)
-
-### Git Hooks Configuration and installation
-
-The git hooks directory is configured to `.git-hooks` (See [Git Hooks configuration scripts](git/config/hooks))
-
-And the following hooks are synced in it:
-
-* [commit message hook](git/hooks/commit-msg/commit-lint) - for commit lint check
-* [pre-commit](git-hooks/prevent-out-of-sync-commit) - to check for out of sync branch
-
-### Scripts in PATH
-
-Install the common [scripts](bin) in the `PATH`
 
 ### Editor Config for code styling
 
@@ -59,11 +82,11 @@ Install the [root editor config](copier-template/.editorconfig)
 
 ### Copy .gitignore and .gitattributes if not found
 
-Default  [.gitignore](git/ignore/.gitignore) and [.gitattributes](git/ignore/.gitattributes) are installed if not found.
+Default  [.gitignore](copier-template/.gitignore) and [.gitattributes](copier-template/.gitattributes) are installed
 
-### Create a Default LICENSE
+### Create a LICENSE
 
-Default License is installed if not found
+A License is installed
 
 ### Project only env configuration (direnv.d)
 
@@ -76,23 +99,27 @@ In your scripts, you can use the following env:
 |-------------------------|----------------------------------------------------------------------|
 | `PROJECT_ROOT`          | The root directory of the git repo (ie `GIT_ROOT` without submodule) |
 | `ORGANISATION_ENV_NAME` | The organization name in an env format                               |
-| `RM_PREFIX`             | The resource manager prefix (ie `RM`)                                |
 
-## Repo Manager Customization / Environment
+### Scripts in PATH
 
-You can change the behavior of the [envrc](envrc/.envrc) resource manager script by setting the following variable in
+Install this repository by cloning it and put the common [scripts](bin) in the `PATH`
+
+You can change the behavior of the [envrc](copier-template/.envrc.jinja) resource manager script by setting the following variable in
 your shell profile, `~/.bashrc`, or `~/.config/direnv/direnvrc`, or `~/.envrc.local`.
 
-The `ORGANISATION_NAME` variable is optional.
 
-| Environment                                    | Default  Value                             | Description                                                             |
-|------------------------------------------------|--------------------------------------------|-------------------------------------------------------------------------|
-| `RM_${ORGANIZATION_NAME}_DIR` <BR> or `RM_DIR` | `$PROJET_ROOT/../repo-manager`             | The local file system location of the resource manager repository clone |
-| `RM_${ORGANIZATION_NAME}_URI` <BR> or `RM_URI` | https://github.com/combostrap/repo-manager | The URI location of the resource manager repository                     |
+| Environment | Default  Value                             | Description                                                             |
+|-------------|--------------------------------------------|-------------------------------------------------------------------------|
+| `RM_DIR`    | `$PROJET_ROOT/../repo-manager`             | The local file system location of the resource manager repository clone |
+| `RM_URI`    | https://github.com/combostrap/repo-manager | The URI location of the resource manager repository                     |
 
-## Contrib
+### Prepare your next commit
 
-You can fork this repo and
-
-* make it your own
-* or create a pull request to contribute
+You can check the files in you next commit with:
+```bash
+task prepare
+# equivalent of
+git add -A && pre-commit run
+# or with the common dev script
+git-prepare
+```

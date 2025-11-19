@@ -28,9 +28,6 @@ release:
   github:
     owner: combostrap
     releaseName: "Release {{projectEffectiveVersion}}"
-    prerelease:
-      # # A regex to determine if the project version is a prerelease
-      pattern: .*-rc.*
     # https://jreleaser.org/guide/latest/reference/release/changelog.html
     changelog:
       formatted: ALWAYS

@@ -1,11 +1,6 @@
 version: '3'
 
 tasks:
-  # Prepare is a Node.js convention command name to lint and correct file
-  prepare:
-    cmds:
-      - |
-        git add -A && pre-commit run
   # Update this repo with the copier-template
   update:
     cmds:

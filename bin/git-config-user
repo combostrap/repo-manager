@@ -4,7 +4,7 @@
 # Strict Bash
 set -TCEeuo pipefail
 
-source "$RM_DIR/bash/resource-manager-lib.sh"
+source "$RM_DIR/bin/lib/resource-manager-lib.sh"
 
 
 # Git User Email

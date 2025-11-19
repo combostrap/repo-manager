@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Disallow push to default branch
 # https://gist.github.com/kalpeshsingh/e7682478b8927700c714f12e37f0837e
+# Same as
+# https://github.com/pre-commit/pre-commit-hooks?tab=readme-ov-file#no-commit-to-branch
 
 set -TCEeuo pipefail
 
