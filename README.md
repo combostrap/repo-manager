@@ -38,8 +38,8 @@ Install:
 * for a new git repo
 
 ```bash
-cd your_repo
-git init
+# Optionally
+# cd your_repo && git init
 copier copy https://github.com/combostrap/repo-manager .
 ```
 
@@ -107,10 +107,10 @@ Common scripts located in the [bin](bin) directory are made available:
 The code is in the [envrc](copier-template/.envrc.jinja) and can be configured by setting the
 following variable in your shell profile, `~/.bashrc`, or `~/.config/direnv/direnvrc`, or `~/.envrc.local`.
 
-| Environment | Default  Value                             | Description                                                             |
-|-------------|--------------------------------------------|-------------------------------------------------------------------------|
-| `REPM_DIR`  | `$PROJET_ROOT/../repo-manager`             | The local file system location of the resource manager repository clone |
-| `REPM_URI`  | https://github.com/combostrap/repo-manager | The URI location of the resource manager repository                     |
+| Environment                     | Default  Value                             | Description                                                             |
+|---------------------------------|--------------------------------------------|-------------------------------------------------------------------------|
+| `REPM_${ORGANIZATION_NAME}_DIR` | `$PROJET_ROOT/../repo-manager`             | The local file system location of the resource manager repository clone |
+| `REPM_${ORGANIZATION_NAME}_URI` | https://github.com/combostrap/repo-manager | The URI location of the resource manager repository                     |
 
 #### Scripts Environment variable
 
