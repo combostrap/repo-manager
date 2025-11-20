@@ -1,4 +1,5 @@
 # EditorConfig is awesome: https://EditorConfig.org
+# See options at: https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#current-universal-properties
 
 # top-most EditorConfig file
 # The editor looks up the directory tree until it finds `root = true`
@@ -12,3 +13,12 @@ indent_size = 2
 trim_trailing_whitespace = true
 end_of_line = lf
 insert_final_newline = true
+
+# Unset
+# Due to POM.xml, the indentation is:
+# * 9 (ie project + space) at the project node when wrapping the long attributes on 2 lines
+# * 2
+[*.xml]
+indent_style = unset
+indent_size = unset
+tab_width = unset
