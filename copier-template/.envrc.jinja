@@ -60,48 +60,49 @@ fi
 
 
 #################
-# REPM
+# DEVF
 # Bin script installation
 # The installation is done by cloning the repo to a well-known location.
 #################
 echo ""
 echo "Repo manager: "
-export REPM_PREFIX="REPM"
-REPM_DIR_VAR_NAME="${REPM_PREFIX}_${ORGANISATION_ENV_NAME}_DIR"
-export REPM_DIR
-REPM_DIR="${!REPM_DIR_VAR_NAME:-}"
-if [ "$REPM_DIR" != "" ]; then
-  echo "   Repo Directory               : $REPM_DIR (from var $REPM_DIR_VAR_NAME)"
+export DEVF_PREFIX="DEVF"
+DEVF_DIR_VAR_NAME="${DEVF_PREFIX}_${ORGANISATION_ENV_NAME}_DIR"
+export DEVF_DIR
+DEVF_DIR="${!DEVF_DIR_VAR_NAME:-}"
+if [ "$DEVF_DIR" != "" ]; then
+  echo "   Repo Directory               : $DEVF_DIR (from var $DEVF_DIR_VAR_NAME)"
 else
-  REPM_DIR=$(realpath "$PWD/../repo-manager")
-  echo "   Repo Directory               : $REPM_DIR (default)"
+  DEVF_DIR=$(realpath "$PWD/../devfiles")
+  echo "   Repo Directory               : $DEVF_DIR (default)"
 fi
-if [ ! -d "$REPM_DIR" ]; then
+if [ ! -d "$DEVF_DIR" ]; then
 
-    repm_echo_yellow "REPM_DIR ($REPM_DIR) does not exist."
-    REPM_REPO_URI_VAR_NAME="${REPM_PREFIX}_${ORGANISATION_ENV_NAME}_URI"
-    REPM_REPO_URI="${!REPM_REPO_URI_VAR_NAME:-https://github.com/combostrap/repo-manager}"
-    repm_echo_yellow "Clone $REPM_REPO_URI to $REPM_DIR? Y(Yes-Default)/N(No)"
+    repm_echo_yellow "DEVF_DIR ($DEVF_DIR) does not exist."
+    DEVF_REPO_URI_VAR_NAME="${DEVF_PREFIX}_${ORGANISATION_ENV_NAME}_URI"
+    DEVF_REPO_URI="${!DEVF_REPO_URI_VAR_NAME:-https://github.com/combostrap/devfiles}"
+    repm_echo_yellow "Clone $DEVF_REPO_URI to $DEVF_DIR? Y(Yes-Default)/N(No)"
     read -r CLONE
     if [ "$CLONE" == "" ] || [ "$CLONE" == "Y" ]; then
-        git clone "$REPM_REPO_URI" "$REPM_DIR"
+        git clone "$DEVF_REPO_URI" "$DEVF_DIR"
         repm_echo_yellow "Repo Manager repo cloned"
     fi
 
 fi
 
 # Exit if the repo was not installed
-if [ -d "$REPM_DIR" ]; then
+if [ -d "$DEVF_DIR" ]; then
 
     #################
     # Bin
     #################
-    BIN_PATH="$REPM_DIR/bin"
-    export PATH="$BIN_PATH:$PATH" # bin path first as it has a higher priority
-    echo "   Common Scripts Path          : $BIN_PATH"
-    BIN_PACKAGE_MANAGER_PATH="$REPM_DIR/bin/package-manager/{{ package_manager }}"
-    export PATH="$BIN_PACKAGE_MANAGER_PATH:$PATH" # bin path first as it has a higher priority
-    echo "   Package Manager Scripts Path : $BIN_PACKAGE_MANAGER_PATH"
+    DEV_SCRIPT_PATH="$DEVF_DIR/dev-scripts"
+    COMMON_SCRIPT_PATH="$DEV_SCRIPT_PATH/common"
+    export PATH="$COMMON_SCRIPT_PATH:$PATH" # script path first as it has a higher priority
+    echo "   Common Scripts Path          : $COMMON_SCRIPT_PATH"
+    PACKAGE_MANAGER_PATH="$DEV_SCRIPT_PATH/package-manager/{{ package_manager }}"
+    export PATH="$PACKAGE_MANAGER_PATH:$PATH" # script path first as it has a higher priority
+    echo "   Package Manager Scripts Path : $PACKAGE_MANAGER_PATH"
 
     echo ""
     echo "Git: "
@@ -135,7 +136,7 @@ echo ""
 echo "Env: "
 echo "   PROJECT_ROOT      : $PROJECT_ROOT"
 echo "   ORGANISATION_NAME : $ORGANISATION_NAME"
-echo "   REPM_DIR          : $REPM_DIR"
+echo "   DEVF_DIR          : $DEVF_DIR"
 
 # Last EOL before direnv output
 echo ""

@@ -1,26 +1,49 @@
-# Repo Manager (repm): Dynamic Repository Management
+# Combostrap Dev files - development flow
 
 ## About
 
-This repository helps to init and update git combostrap repositories.
+This repository contains `devfiles`.
 
-## Concept / How it works
+`dotfiles` configure application files, `devfiles` configure a development flow.
 
-It uses the following software to manage common repositories stuff:
+With them, you can:
+* init a new repo
+* update an existing one
+and get instantly a consistent development environment across git repositories.
+
+
+## QuickStart in three commands
+
+```bash
+cd your-git-repo
+copier copy https://github.com/combostrap/devfiles .
+direnv reload
+```
+
+For a step by step, see [the detailed steps](#steps)
+
+## How it works
+
+### Core Component
+
+It uses the following core components to manage common repositories stuff:
 
 * [copier](https://copier.readthedocs.io/) for project templating and upgrade
-* [direnv](https://direnv.net/) for project setup and environment
+* [direnv](https://direnv.net/) for setup (project and environment)
+* [dev scripts](#dev-scripts) for development flow
+
+### Utility components
+
+The utility components are used in the scripts or as configuration:
+
 * [pre-commit](https://pre-commit.com/) for files check and normalization
-* [common scripts](#common-scripts)  are made available by cloning this repo and putting them in the `PATH`.
-
-## Where are the artifacts
-
-* The `copier` template is located at [copier template](copier-template)
-* The `pre-commit`
-  * config is part of the template at [.pre-commit-config.yaml](copier-template/.pre-commit-config.yaml)
-  * setup is performed with direnv via [.envrc](copier-template/.envrc.jinja)
-  * extra `git hooks` are available at [git-hooks](git-hooks)
-* The common dev scripts are in the [bin](bin)
+* [jreleaser](#jreleaser ) for release management
+* [pass](#pass---local-secret-management) for secrets management
+* [git-cliff](https://git-cliff.org/) for change log and version bump
+* [go task](#task-distribution) for common tasks distribution
+* [editorconfig](#code-styling-editor-config) for code styling
+* [commitlint](#commit-message-validation-commitlint) for commit message validation
+* [markdown-link-check](#markdown-link-check) for Markdown link validation
 
 ## Steps
 
@@ -35,15 +58,14 @@ Install:
 
 ### Copy or update this copier template
 
-* for a new git repo
+* to install the latest `devfiles` in a git repo (empty or not)
 
 ```bash
-# Optionally
-# cd your_repo && git init
-copier copy https://github.com/combostrap/repo-manager .
+# Optionally cd your_repo && git init
+copier copy https://github.com/combostrap/devfiles .
 ```
 
-* to update a git repo
+* to update a git repo with the last `devfiles` version
 
 ```bash
 copier update .
@@ -55,8 +77,8 @@ The [.envrc](copier-template/.envrc.jinja) file is the main entry for `setup` an
 
 It will:
 
-* install the git hooks with `pre-commit`
-* [install the common scripts](#common-scripts)
+* install the git hooks with [pre-commit](#git-hooks-and-pre-commit)
+* [install the common scripts](#dev-scripts)
 
 If you open your terminal, `direnv` should execute `.envrc`.
 If not:
@@ -67,20 +89,61 @@ direnv reload
 
 ## Features and configuration
 
+### Copier Template
+
+The `copier` template is located at [copier template](copier-template)
+
+### Pass - Local Secret Management
+
+Pass ([pass](https://www.passwordstore.org/) or [gopass](https://www.gopass.pw/)) is used for secret management.
+
+All secrets are located under the organization name.
+
+Example for a GitHub token:
+
+```bash
+pass "$ORGANISATION_PATH_NAME/github/release-token"
+```
+
+The secrets are not stored as global shell variables.
+We create wrapper scripts so that the secret is only available while running the script.
+
+Example of wrappers:
+
+* [jreleaser](dev-scripts/common/jreleaser)
+* [mvnw (maven)](dev-scripts/package-manager/maven/mvnw)
+
+### JReleaser
+
+For release management, we use [jreleaser](https://jreleaser.org/).
+
+We distribute with this template, a [jreleaser](dev-scripts/common/jreleaser) wrapper script
+to pass the needed secrets with [pass](#pass---local-secret-management)
+
 ### Git User Configuration
 
 To set the git user, you can set in your `.bashrc` the following env:
 
 | Env                                     |
 |-----------------------------------------|
-| `REPM_${ORGANIZATION_NAME}_EMAIL`       |
-| `REPM_${ORGANIZATION_NAME}_SIGNING_KEY` |
+| `DEVF_${ORGANIZATION_NAME}_EMAIL`       |
+| `DEVF_${ORGANIZATION_NAME}_SIGNING_KEY` |
 
-See the [Git User Configuration Script](bin/git-config-user)
+See the [Git User Configuration Script](dev-scripts/common/git-config-user)
 
-### Editor Config for code styling
+### Code Styling (Editor Config)
 
-Install the [root editor config](copier-template/.editorconfig)
+The [editorconfig](https://editorconfig.org/) file is [.editorconfig](copier-template/.editorconfig)
+
+### Commit Message Validation (CommitLint)
+
+[commitlint](https://commitlint.js.org/) configuration is located
+at [commitlint.config.js](copier-template/.config/commitlint.config.js)
+
+### Markdown Link-Check
+
+[markdown-link-check](https://github.com/tcort/markdown-link-check) for Markdown link validation
+configuration is located at [markdown-link-check.config.json](copier-template/.config/markdown-link-check.config.json)
 
 ### Copy .gitignore and .gitattributes if not found
 
@@ -97,20 +160,24 @@ A License is installed
 For project only configuration, you can add your own `direnv` scripts in the `PROJECT_ROOT/direnv.d` directory.
 All `.sh` files present in this directory will be sourced.
 
-#### Common Scripts
+#### Dev Scripts
 
-Common scripts located in the [bin](bin) directory are made available:
+Dev scripts located in the [dev-scripts](dev-scripts) directory.
+
+They are made available:
 
 * by cloning this repo
-* and put the [bin](bin) in the `PATH`
+* and put in the PATH:
+  * the [common-scripts directory](dev-scripts/common)
+  * the [package-manager directory](dev-scripts/package-manager)
 
 The code is in the [envrc](copier-template/.envrc.jinja) and can be configured by setting the
 following variable in your shell profile, `~/.bashrc`, or `~/.config/direnv/direnvrc`, or `~/.envrc.local`.
 
-| Environment                     | Default  Value                             | Description                                                             |
-|---------------------------------|--------------------------------------------|-------------------------------------------------------------------------|
-| `REPM_${ORGANIZATION_NAME}_DIR` | `$PROJET_ROOT/../repo-manager`             | The local file system location of the resource manager repository clone |
-| `REPM_${ORGANIZATION_NAME}_URI` | https://github.com/combostrap/repo-manager | The URI location of the resource manager repository                     |
+| Environment                     | Default  Value                         | Description                                                     |
+|---------------------------------|----------------------------------------|-----------------------------------------------------------------|
+| `DEVF_${ORGANIZATION_NAME}_DIR` | `$PROJET_ROOT/../devfiles`             | The local file system location of the devfiles repository clone |
+| `DEVF_${ORGANIZATION_NAME}_URI` | https://github.com/combostrap/devfiles | The URI location of the devfiles repository                     |
 
 #### Scripts Environment variable
 
@@ -122,6 +189,14 @@ In your scripts, you can use the following env:
 | `ORGANISATION_NAME`      | The organization name                                                |
 | `ORGANISATION_ENV_NAME`  | The organization name in a env format                                |
 | `ORGANISATION_PATH_NAME` | The organization name in a file path format                          |
+
+### Git Hooks and Pre-commit
+
+The `pre-commit`:
+
+* config is part of the template at [.pre-commit-config.yaml](copier-template/.pre-commit-config.yaml)
+* setup is performed with direnv via [.envrc](copier-template/.envrc.jinja)
+* extra `git hooks` are available at [git-hooks](git-hooks)
 
 ### Prepare your next commit
 
@@ -144,3 +219,7 @@ task update
 # equivalent to
 copier update .
 ```
+
+### Task Distribution
+
+The [go task](https://github.com/go-task/task) file is [Taskfile.yaml](copier-template/Taskfile.yaml)

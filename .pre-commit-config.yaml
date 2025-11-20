@@ -35,7 +35,7 @@ repos:
         stages: [ commit-msg ]
         additional_dependencies: [ '@commitlint/config-conventional' ]
         args: [ "--verbose" , "--config", ".config/commitlint.config.js" ]
-  - repo: https://github.com/combostrap/repo-manager
+  - repo: https://github.com/combostrap/devfiles
     rev: v0.1.0
     hooks:
       - id: prevent-out-of-sync-commit
