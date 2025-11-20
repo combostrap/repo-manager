@@ -1,19 +1,26 @@
-# Combostrap Dev files - development flow
+# Devfiles - Dev flow configuration across Git repositories
 
 ## About
 
-This repository contains `devfiles`.
+This repository contains [devfiles](#what-are-devfiles).
+
+We use them to manage centrally and distribute our development flow and environment across Git repositories.
+
+## What are devfiles?
 
 `dotfiles` configure application files, `devfiles` configure a development flow.
 
 With them, you can:
-* init a new repo
-* update an existing one
-and get instantly a consistent development environment across git repositories.
+
+* init/scaffold a new repo
+* update an existing one to the latest `devfiles`
+
+and get instantly a consistent development environment across your git repositories.
 
 
 ## QuickStart in three commands
 
+In a new or existing git repository, execute the following commands to install the [devfiles](#what-are-devfiles):
 ```bash
 cd your-git-repo
 copier copy https://github.com/combostrap/devfiles .
@@ -26,15 +33,15 @@ For a step by step, see [the detailed steps](#steps)
 
 ### Core Component
 
-It uses the following core components to manage common repositories stuff:
+It uses the following core components:
 
-* [copier](https://copier.readthedocs.io/) for project templating and upgrade
-* [direnv](https://direnv.net/) for setup (project and environment)
+* [copier](#copy-or-update-this-copier-template) for `devfiles` installation and upgrade
+* [direnv](#setup-and-local-configuration-direnv) for setup (project and environment)
 * [dev scripts](#dev-scripts) for development flow
 
 ### Utility components
 
-The utility components are used in the scripts or as configuration:
+The utility components are used in the [scripts](#dev-scripts) or as configuration:
 
 * [pre-commit](https://pre-commit.com/) for files check and normalization
 * [jreleaser](#jreleaser ) for release management
@@ -71,14 +78,16 @@ copier copy https://github.com/combostrap/devfiles .
 copier update .
 ```
 
-### Setup and local configuration
+Note: the `copier template` is in the [copier-template directory](copier-template)
+
+### Setup and local configuration (direnv)
 
 The [.envrc](copier-template/.envrc.jinja) file is the main entry for `setup` and local config.
 
 It will:
 
 * install the git hooks with [pre-commit](#git-hooks-and-pre-commit)
-* [install the common scripts](#dev-scripts)
+* [install the dev scripts](#dev-scripts)
 
 If you open your terminal, `direnv` should execute `.envrc`.
 If not:
@@ -89,9 +98,8 @@ direnv reload
 
 ## Features and configuration
 
-### Copier Template
 
-The `copier` template is located at [copier template](copier-template)
+
 
 ### Pass - Local Secret Management
 
@@ -105,8 +113,10 @@ Example for a GitHub token:
 pass "$ORGANISATION_PATH_NAME/github/release-token"
 ```
 
-The secrets are not stored as global shell variables.
-We create wrapper scripts so that the secret is only available while running the script.
+Note:
+* The secrets are not stored as global shell variables.
+* They are retrieved in wrapper script that wraps a command.
+* They are therefore only available while running the wrapper script.
 
 Example of wrappers:
 
@@ -149,9 +159,12 @@ configuration is located at [markdown-link-check.config.json](copier-template/.c
 
 Default  [.gitignore](copier-template/.gitignore) and [.gitattributes](copier-template/.gitattributes) are installed
 
-### Create a LICENSE
+### Create a LICENSE file
 
-A License is installed
+A `LICENSE` file is created from the following templates:
+  * [Apache 2.0](copier-template/%7B%25%20if%20license_type%20==%20'Apache-2.0'%20%25%7DLICENSE%7B%25%20endif%20%25%7D.jinja)
+  * [MIT](copier-template/%7B%25%20if%20license_type%20==%20'MIT'%20%25%7DLICENSE%7B%25%20endif%20%25%7D.jinja)
+  * [FSL](copier-template/%7B%25%20if%20license_type%20==%20'FSL-1.1-ALv2'%20%25%7DLICENSE.md%7B%25%20endif%20%25%7D.jinja)
 
 ### Scripts
 
@@ -166,8 +179,8 @@ Dev scripts located in the [dev-scripts](dev-scripts) directory.
 
 They are made available:
 
-* by cloning this repo
-* and put in the PATH:
+* by cloning this repository
+* and put in the `PATH`:
   * the [common-scripts directory](dev-scripts/common)
   * the [package-manager directory](dev-scripts/package-manager)
 
@@ -210,16 +223,18 @@ git add -A && pre-commit run
 git-prepare
 ```
 
-### Repository update
-
-You can update any repo generated to the last copier template with:
-
-```bash
-task update
-# equivalent to
-copier update .
-```
-
 ### Task Distribution
 
 The [go task](https://github.com/go-task/task) file is [Taskfile.yaml](copier-template/Taskfile.yaml)
+
+## How to
+
+### How to update the devfiles to the latest version?
+
+You can update any repo generated to the last `devfiles` with:
+
+```bash
+task update
+# or/equivalent to
+copier update .
+```

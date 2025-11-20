@@ -7,7 +7,7 @@ organisation_name:
   validator: "{% if organisation == '' %}Must not be empty{% endif %}"
   help: |
     Organization ?
-    Generally the organization name of your repo
+    Generally the owner name of your repo
     ie `orga` in https://github.com/orga/repo
 
 copyright_year:
@@ -18,7 +18,7 @@ copyright_year:
 
 copyright_owner:
   type: str
-  help: "Licence owner"
+  help: "License owner"
   default: "{{ organisation_name }}"
 
 license_type:
