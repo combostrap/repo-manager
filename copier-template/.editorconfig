@@ -35,3 +35,13 @@ space_redirects    = true  # like -sr
 keep_padding       = true  # like -kp
 function_next_line = true  # like -fn
 never_split        = true  # like -ns
+
+[*.md]
+# indent is unset because
+# due to list alignment, it is 2 with star list and 3 with number list
+# ie
+# * First
+#   Second
+# 1) First
+#    Second
+indent_size = unset
