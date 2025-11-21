@@ -67,10 +67,10 @@ releaser:
 _answers_file: .copier-answers.yml
 
 
-# Skip if exists
+# Skip if exists or force overwrite
 _skip_if_exists:
   - "LICENSE"
-
+  - "!.envrc"  # The ! negates the skip, forcing overwrite
 
 # Excluding
 # https://copier.readthedocs.io/en/stable/configuring/#exclude
