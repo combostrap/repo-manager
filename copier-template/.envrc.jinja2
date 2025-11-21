@@ -157,14 +157,14 @@ fi
 ENVRCD="$PROJECT_ROOT/.envrc.d"
 echo ""
 echo "Envrc.d scripts: "
-if [ -d ENVRCD ]; then
+if [ -d "$ENVRCD" ]; then
   # All file loaded in a directory should have a sh extension
   # This is how /etc/profile also work
   for file in "$ENVRCD"/*.sh; do
     # shellcheck disable=SC1090
     if [ -r "$file" ]; then
       source "$file"
-      echo "   executed $file"
+      echo "   $(realpath --relative-to="$ENVRCD" "$file")"
     fi
   done
   unset file
