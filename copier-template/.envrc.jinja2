@@ -102,15 +102,15 @@ if [ -d "$DEVF_DIR" ]; then
     # Bin
     #################
     DEV_SCRIPT_PATH="$DEVF_DIR/dev-scripts"
-    COMMON_SCRIPT_PATH="$DEV_SCRIPT_PATH/common"
-    export PATH="$COMMON_SCRIPT_PATH:$PATH" # script path first as it has a higher priority
-    echo "   Common Scripts Path          : $COMMON_SCRIPT_PATH"
     PACKAGE_MANAGER_PATH="$DEV_SCRIPT_PATH/package-manager/$PACKAGE_MANAGER"
     export PATH="$PACKAGE_MANAGER_PATH:$PATH" # script path first as it has a higher priority
     echo "   Package Manager Scripts Path : $PACKAGE_MANAGER_PATH"
+    GIT_HOOKS="$DEV_SCRIPT_PATH/git-hooks"
+    export PATH="$GIT_HOOKS:$PATH" # script path first as it has a higher priority
+    echo "   Git Hooks Path               : $GIT_HOOKS"
     SETUP_PATH="$DEV_SCRIPT_PATH/setup"
     export PATH="$SETUP_PATH:$PATH" # script path first as it has a higher priority
-    echo "   Setup Scripts Path : $SETUP_PATH"
+    echo "   Setup Scripts Path           : $SETUP_PATH"
 
     echo ""
     echo "Git: "
