@@ -139,7 +139,7 @@ To set the git user, you can set in your `.bashrc` the following env:
 | `DEVF_${ORGANIZATION_NAME}_EMAIL`       |
 | `DEVF_${ORGANIZATION_NAME}_SIGNING_KEY` |
 
-See the [Git User Configuration Script](dev-scripts/setup/git-config-user)
+See the [Git User Configuration Script](dev-scripts/setup/git-config.sh)
 
 ### Code Styling (Editor Config)
 
