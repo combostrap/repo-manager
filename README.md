@@ -159,6 +159,9 @@ at [commitlint.config.js](copier-template/.config/commitlint.config.js)
 [markdown-link-check](https://github.com/tcort/markdown-link-check) for Markdown link validation
 configuration is located at [markdown-link-check.config.json](copier-template/.config/markdown-link-check.config.json)
 
+`http` links are checked because only the staged files ar checked
+on commit with `pre-commit`.
+
 ### Copy .gitignore and .gitattributes if not found
 
 Default  [.gitignore](copier-template/.gitignore) and [.gitattributes](copier-template/.gitattributes) are installed
