@@ -17,10 +17,10 @@ With them, you can:
 
 and get instantly a consistent development environment across your git repositories.
 
-
 ## QuickStart in three commands
 
 In a new or existing git repository, execute the following commands to install the [devfiles](#what-are-devfiles):
+
 ```bash
 cd your-git-repo
 copier copy https://github.com/combostrap/devfiles .
@@ -98,9 +98,6 @@ direnv reload
 
 ## Features and configuration
 
-
-
-
 ### Pass - Local Secret Management
 
 Pass ([pass](https://www.passwordstore.org/) or [gopass](https://www.gopass.pw/)) is used for secret management.
@@ -114,6 +111,7 @@ pass "$ORGANISATION_PATH_NAME/github/release-token"
 ```
 
 Note:
+
 * The secrets are not stored as global shell variables.
 * They are retrieved in wrapper script that wraps a command.
 * They are therefore only available while running the wrapper script.
@@ -146,9 +144,10 @@ See the [Git User Configuration Script](dev-scripts/setup/git-config.sh)
 The [editorconfig](https://editorconfig.org/) file is [.editorconfig](copier-template/.editorconfig)
 
 We also use the following `editorconfig` code styling utility:
-  * [shfmt](https://github.com/mvdan/sh/blob/master/cmd/shfmt/shfmt.1.scd#examples) for bash styling
-  * [editorconfig-checker)](https://github.com/editorconfig-checker/editorconfig-checker) as [hook](#git-hooks-and-pre-commit)
 
+* [shfmt](https://github.com/mvdan/sh/blob/master/cmd/shfmt/shfmt.1.scd#examples) for bash styling
+* [editorconfig-checker)](https://github.com/editorconfig-checker/editorconfig-checker)
+  as [hook](#git-hooks-and-pre-commit)
 
 ### Commit Message Validation (CommitLint)
 
@@ -167,14 +166,24 @@ Default  [.gitignore](copier-template/.gitignore) and [.gitattributes](copier-te
 ### Create a LICENSE file
 
 A `LICENSE` file is created from the following templates:
-  * [Apache 2.0](copier-template/%7B%25%20if%20license_type%20==%20'Apache-2.0'%20%25%7DLICENSE%7B%25%20endif%20%25%7D.jinja2)
-  * [MIT](copier-template/%7B%25%20if%20license_type%20==%20'MIT'%20%25%7DLICENSE%7B%25%20endif%20%25%7D.jinja2)
-  * [FSL](copier-template/%7B%25%20if%20license_type%20==%20'FSL-1.1-ALv2'%20%25%7DLICENSE.md%7B%25%20endif%20%25%7D.jinja2)
+
+* [Apache 2.0](copier-template/%7B%25%20if%20license_type%20==%20'Apache-2.0'%20%25%7DLICENSE%7B%25%20endif%20%25%7D.jinja2)
+* [MIT](copier-template/%7B%25%20if%20license_type%20==%20'MIT'%20%25%7DLICENSE%7B%25%20endif%20%25%7D.jinja2)
+* [FSL](copier-template/%7B%25%20if%20license_type%20==%20'FSL-1.1-ALv2'%20%25%7DLICENSE.md%7B%25%20endif%20%25%7D.jinja2)
 
 We follow the most common names:
+
 * `LICENSE`,
 * `LICENSE.txt`,
 * `LICENSE.md`
+
+### Create a CONTRIBUTING.md
+
+A
+minimal [Contributing guideline](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors)
+file is created.
+
+This file is used also to give any direction on how people can start easily with the project.
 
 ### Scripts
 
@@ -250,7 +259,3 @@ task update
 # or/equivalent to
 copier update .
 ```
-
-## Contrib
-
-How to develop and contrib to this repository. See [contrib](contrib.md)

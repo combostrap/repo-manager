@@ -99,6 +99,7 @@ _answers_file: .copier-answers.yml
 # Skip if exists
 _skip_if_exists:
   - "LICENSE"
+  - "CONTRIBUTING.md"
 
 # Excluding
 # https://copier.readthedocs.io/en/stable/configuring/#exclude
