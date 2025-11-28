@@ -1,9 +1,9 @@
 ###################
 # Questions
 ###################
-organisation_name:
+organization_name:
   type: str
-  validator: "{% if organisation_name == '' %}Must not be empty{% endif %}"
+  validator: "{% if organization_name == '' %}Must not be empty{% endif %}"
   help: |
     Organization ?
     Generally the owner name of your repo
@@ -26,7 +26,7 @@ copyright_year:
 copyright_owner:
   type: str
   help: "License owner"
-  default: "{{ organisation_name }}"
+  default: "{{ organization_name }}"
 
 license_type:
   type: str
@@ -113,7 +113,7 @@ _skip_if_exists:
 # https://copier.readthedocs.io/en/stable/configuring/#exclude
 _exclude:
   - "{% if package_manager != 'maven' %}.mvn{% endif %}"
-  - "{% if not (application_type == 'pom' and package_manager == 'maven' and releaser == 'jreleaser') %}cd-pom-maven-jreleaser.yml{% endif %}"
+  - "{% if not ((application_type == 'pom' or application_type == 'library') and package_manager == 'maven' and releaser == 'jreleaser') %}cd-library-maven-jreleaser.yml{% endif %}"
   - "{% if dependency_manager != 'dependabot' %}dependabot.yml{% endif %}"
 
 # Subdirectory from the repo to use as template
