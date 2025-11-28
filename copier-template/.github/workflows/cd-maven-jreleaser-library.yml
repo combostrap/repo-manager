@@ -30,7 +30,32 @@ jobs:
         run:
           gpg --batch --yes --passphrase "${{ secrets.GPG_SOFTWARE_SIGNING_PASSPHRASE }}" --import <(echo "${{ secrets.GPG_SOFTWARE_SIGNING_KEY }}")
 
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          # Should be defined by project but how
+          java-version: '17'
+          distribution: 'temurin'
+
       - name: Publish package
+        run: |
+
+          set -TCEeuo pipefail
+
+          echo "Check config"
+          if ! CHECK_CONFIG=$(./mvnw --batch-mode -s .github/cd-maven-settings.xml --quiet jreleaser:config); then
+            echo "Error while checking the config"
+            echo "$CHECK_CONFIG"
+            exit 1
+          fi
+
+          echo "Stage Artifacts"
+          ./mvnw --batch-mode -s .github/cd-maven-settings.xml --quiet -Ppublication
+
+          # Deploy snapshot or release
+          echo "Deploy snapshot or release"
+          ./mvnw --batch-mode -s .github/cd-maven-settings.xml jreleaser:deploy
+
         env:
           # https://central.sonatype.com/usertoken
           JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
@@ -42,16 +67,3 @@ jobs:
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.GPG_SOFTWARE_SIGNING_PASSPHRASE }}
           # GitHub Token for release creation
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-
-          set -TCEeuo pipefail
-
-          echo "Check config"
-          ./mvnw --batch-mode --quiet jreleaser:config > /dev/null
-
-          echo "Stage Artifacts"
-          ./mvnw --batch-mode  --quiet -Ppublication
-
-          # Deploy snapshot or release
-          echo "Deploy snapshot or release"
-          ./mvnw --batch-mode jreleaser:deploy
