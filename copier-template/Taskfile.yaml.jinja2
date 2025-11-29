@@ -12,7 +12,7 @@ tasks:
   # -DskipTests and not -Dmaven.test.skip so that test packaging is not skipped
   install:
     cmds:
-      - mvn install -DskipTests
+      - ./mvnw install -DskipTests --update-snapshots
 {%- endif %}
 {%- if package_manager == 'maven' and (application_type == 'pom' or application_type == 'library') %}
   # Deploy the snapshot to maven central
