@@ -75,3 +75,6 @@ indent_size = unset
 # Due to catch (IllegalBlockSizeException
 #        InvalidKeyException e) {
 indent_size = unset
+# Block comment (single star) should align to the code and not to the first column
+# By default, only javadoc comment (double star) do that
+ij_java_block_comment_at_first_column = false
