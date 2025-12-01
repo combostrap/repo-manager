@@ -53,6 +53,8 @@
     Install artifacts in the local repo by running maven install
   entry: dev-scripts/git-hooks/maven-install
   language: script
-  pass_filenames: false # only once
-  files: '(\.java$|pom\.xml$)' # only when a java file or pom.xml is present
+  # always_run = true is mandatory
+  # as post commit does not filter on file names
+  # https://pre-commit.com/#post-commit
+  always_run: true
   stages: [ post-commit ]

@@ -1,6 +1,57 @@
 #!/usr/bin/env bash
 # A hook to check javadoc
+# To see the checks, see the doc https://docs.oracle.com/en/java/javase/18/docs/specs/man/javadoc.html#doclint
 
+# General note:
+# This script accepts a file
+# but because we need to compute the source dir and the classpath
+# it may be slow if a lot of files are changed as the computation happens by file
+# We also need to pass the output directory
+# may be using `mvn ./mvnw javadoc:javadoc` is a better option after all
+
+# Fail if any error
 set -TCEeuo pipefail
 
-javadoc -Xdoclint:all -private "$1"
+ARGS+=(-private)
+
+# reference check
+# The reference checl will check for bad link in doc link and java import
+# https://docs.oracle.com/en/java/javase/18/docs/specs/man/javadoc.html#doclint
+# To enable this check, we need to pass the source location and class path
+# if we cannot, we disable it
+if [ -f ./mvnw ]; then
+  ARGS+=("-Xdoclint:all")
+  # Computing the source path and the classpath
+  # This SOURCE_DIR expression works only for single module
+  SOURCE_DIR=$(./mvnw help:evaluate -Dexpression=project.build.sourceDirectory -DforceStdout -q)
+  ARGS+=(-sourcepath "$SOURCE_DIR")
+  CLASS_PATH=$(./mvnw dependency:build-classpath | grep --invert-match "^\[INFO\]")
+  ARGS+=("-classpath" "$CLASS_PATH")
+else
+  # Disable the reference check
+  # We exclude the reference check
+  # because it will fail on `import` statements that can't be resolved.
+  ARGS+=("-Xdoclint:all,-reference")
+fi
+
+# Destination directory
+# The default is the current directory
+# and it messed up the code
+JAVADOC_CHECK_DIR="target/javadoc-check"
+mkdir -p "$JAVADOC_CHECK_DIR"
+ARGS+=("-d" "$JAVADOC_CHECK_DIR")
+
+# Do not display status messages
+# so that we get an output only if there is warning
+ARGS+=("-quiet")
+
+# Add the path
+ARGS+=("$1")
+
+# If there is any error, the exit status is not 0
+# and this script will fail thanks to the strict set header
+OUT=$(exec javadoc "${ARGS[@]}")
+if [ "$OUT" != "" ]; then
+  echo -e "Warning in javadoc lint were seen:\n$OUT"
+  exit 1
+fi
