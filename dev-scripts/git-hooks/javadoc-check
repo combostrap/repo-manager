@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# A hook to check javadoc
+
+set -TCEeuo pipefail
+
+javadoc -Xdoclint:all -private "$1"

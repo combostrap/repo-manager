@@ -38,6 +38,15 @@
   pass_filenames: false
   files: 'pom\.xml'
   stages: [ pre-commit ]
+- id: javadoc-check
+  name: check javadoc comments
+  description: |
+    A hook to check javadoc comment block
+  entry: dev-scripts/git-hooks/javadoc-check
+  language: script
+  pass_filenames: true
+  files: '\.java$'
+  stages: [ pre-commit ]
 - id: maven-install
   name: Install artifacts in the local repo
   description: |
