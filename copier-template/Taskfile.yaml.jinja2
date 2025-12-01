@@ -14,6 +14,9 @@ tasks:
   install:
     cmds:
       - ./mvnw install -DskipTests
+  javadoc:
+    cmds:
+      - ./mvnw javadoc:javadoc
 {%- endif %}
 {%- if package_manager == 'maven' and (application_type == 'pom' or application_type == 'library') %}
   # Deploy the snapshot to maven central
