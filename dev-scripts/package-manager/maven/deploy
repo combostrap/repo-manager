@@ -14,9 +14,14 @@ echo "Cleaning"
 mvnw --quiet clean
 
 # Stage all artifacts to a local directory
+# Run the deploy goal that is coupled only with javadoc, source and jar plugins
 echo "Stage Artifacts"
 mvnw --quiet -Ppublication
 
 # Deploy and release
 echo "Deploy and release"
-mvnw jreleaser:deploy
+# JReleaser deployment do not follow the maven.deploy.skip property
+# It just run for each module and we may get this error:
+# stagingRepository does not exist: cli/target/staging-deploy
+# We publish in a relative directory from the root, so non-recursive is to run only once
+mvnw jreleaser:deploy --non-recursive

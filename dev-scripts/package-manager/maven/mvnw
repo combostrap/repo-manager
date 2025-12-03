@@ -28,4 +28,8 @@ export JRELEASER_NEXUS2_USERNAME="${JRELEASER_MAVENCENTRAL_USERNAME}"
 export JRELEASER_NEXUS2_PASSWORD="${JRELEASER_MAVENCENTRAL_PASSWORD}"
 
 # Run
-"$PROJECT_ROOT/mvnw" "$@"
+# We select the second in path order
+# Why? we get mvnw from the project.
+# A third is really unlikely but who knows
+# We take the second in order of priority
+"$(which -a mvnw | sed -n '2p')" "$@"
