@@ -17,7 +17,7 @@ With them, you can:
 
 and get instantly a consistent development environment across your git repositories.
 
-## QuickStart in three commands
+## QuickStart/Install in three commands
 
 In a new or existing git repository, execute the following commands to install the [devfiles](#what-are-devfiles):
 
